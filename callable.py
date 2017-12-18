@@ -29,17 +29,18 @@ def test_sequence_class():
 
 
 def test_lambda():
-    scientists = ["Marie Curie",
-                  "Nicolas Bohr",
-                  "Issac Newton",
-                  "Dimitri Mendelev",
-                  "Charles Darwing",
-                  "Alber Einstein"]
+    scientists = ["Marie Curie French",
+                  "Nicolas Bohr Germany",
+                  "Issac Newton England",
+                  "Dimitri Mendelev Rusia",
+                  "Charles Darwing UK",
+                  "Alber Einstein Germany"]
 
-    # Print list sorted
+    # Print list sorted by last name
     # use a Lambda function
-    pp(sorted(scientists, key=lambda name: name.split()[-1]))
+    pp(sorted(scientists, key=lambda name: name.split()[-2]))
 
+    # Task sort the array by country member string[2]
 
 
 if __name__ == '__main__':
