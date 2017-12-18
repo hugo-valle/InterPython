@@ -7,3 +7,5 @@ try:
 
 finally:
     r.close()
+
+#print("Running Main")
