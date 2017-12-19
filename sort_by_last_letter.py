@@ -15,15 +15,37 @@ def sort_by_last_letter(string):
     return sorted(string, key=last_letter)
 
 
+g = 'global'
+def outer(p="param"):
+    l = "local"
+    def inner():
+        print(g, p, l)
+    inner()
+
+
+def enclosing():
+    x = "closed over"
+    def local_func():
+        print(x)
+    return local_func
+
+
+def test_enclosing():
+    lf = enclosing()
+    lf()
+    print(lf.__closure__)
+
 def main():
     """Test function"""
-    s = sort_by_last_letter(["Hello", "from", "ABC"])
-    print(s)
-    s = sort_by_last_letter(["Hello", "from", "ABC"])
-    print(s)
-    s = sort_by_last_letter(["Hello", "from", "ABC"])
-    print(s)
+    s1 = sort_by_last_letter(["Hello", "from", "ABC"])
+    print(s1)
+    s2 = sort_by_last_letter(["Hello", "from", "ABC"])
+    print(s2)
+    s3 = sort_by_last_letter(["Hello", "from", "ABC"])
+    print(s3)
 
 
 if __name__ == '__main__':
-    main()
+    #main()
+    #outer()
+    test_enclosing()
