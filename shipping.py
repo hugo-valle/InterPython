@@ -1,7 +1,7 @@
 """
 Shipping Container Classes
 """
-
+import iso6346
 
 class ShippingContainer:
     next_serial = 1337
@@ -9,7 +9,10 @@ class ShippingContainer:
     def __init__(self, owner_code, contents):
         self._owner_code = owner_code
         self._contents = contents
-        self._serial = ShippingContainer._get_next_serial()
+        #self._serial = ShippingContainer._get_next_serial()
+        self._bic = ShippingContainer._make_bic_code(
+            owner_code=owner_code,
+            serial=ShippingContainer._get_next_serial())
 
     # we can use a @classmethod instead
     @staticmethod
@@ -26,12 +29,16 @@ class ShippingContainer:
     def create_with_items(cls, owner_code, items):
         return cls(owner_code, contents=list(items))
 
+    @staticmethod
+    def _make_bic_code(owner_code, serial):
+        return iso6346.create(owner_code=owner_code,
+                              serial=str(serial).zfill(6))
+
 if __name__ == '__main__':
     c1 = ShippingContainer("MAE", "fruit")
-    print(c1._serial)
-    print(ShippingContainer.next_serial)
+    print(c1._bic)
     c2 = ShippingContainer.create_empty("YML")
-    print(c2._contents)
+    print(c2._bic)
     c3 = ShippingContainer.create_with_items("ABC",
             ["food", "textiles","minerals"])
-    print(c3._contents)
+    print(c3._bic)
