@@ -58,6 +58,22 @@ class RefrigeratorShippingContainer(ShippingContainer):
             raise ValueError("Temperature is too hot!")
         self._celsius = value
 
+    @staticmethod
+    def _c_to_f(celsius):
+        return celsius * 9/5 + 32
+
+    @staticmethod
+    def _f_to_c(fahrenheit):
+        return (fahrenheit - 32) * 5/9
+
+    # Task: Add support to Read+Write fahrenheit
+    @property
+    def fahrenheit(self):
+        return RefrigeratorShippingContainer._c_to_f(self.celsius)
+
+    @fahrenheit.setter
+    def fahrenheit(self, value):
+        self.celsius = RefrigeratorShippingContainer._f_to_c(value)
 
 
 if __name__ == '__main__':
@@ -74,9 +90,14 @@ if __name__ == '__main__':
                                        celsius=2)
     r2 = RefrigeratorShippingContainer.create_with_items(
         "ESC", ["broccoli, cauliflower","carrots"], celsius=-18)
-    print(r2.celsius)
+    print("celsius:", r2.celsius)
     r2.celsius = -5.0
-    print(r2.celsius)
+    print("celsius:", r2.celsius)
+    print("Fahrenheit", r2.fahrenheit)
+    r2.fahrenheit = -40
+    print("Fahrenheit:", r2.fahrenheit)
+    print("celsius:", r2.celsius)
+
 
     r3 = RefrigeratorShippingContainer.create_empty("PPE", celsius=2.5)
     #print(r3)
