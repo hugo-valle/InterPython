@@ -48,6 +48,17 @@ class RefrigeratorShippingContainer(ShippingContainer):
             raise ValueError("Temperature too hot!")
         self._celsius = celsius
 
+    @property
+    def celsius(self):
+        return self._celsius
+
+    @celsius.setter
+    def celsius(self, value):
+        if value > RefrigeratorShippingContainer.MAX_CELSIUS:
+            raise ValueError("Temperature is too hot!")
+        self._celsius = value
+
+
 
 if __name__ == '__main__':
     c1 = ShippingContainer("MAE", "fruit")
@@ -62,10 +73,12 @@ if __name__ == '__main__':
                                        contents=["fish", "beef", "fruit"],
                                        celsius=2)
     r2 = RefrigeratorShippingContainer.create_with_items(
-        "ESC", ["broccoli, cauliflower","carrots"], celsius=2.0)
-    print(r2._contents)
+        "ESC", ["broccoli, cauliflower","carrots"], celsius=-18)
+    print(r2.celsius)
+    r2.celsius = -5.0
+    print(r2.celsius)
 
     r3 = RefrigeratorShippingContainer.create_empty("PPE", celsius=2.5)
-    print(r3)
+    #print(r3)
 
     print(r1._bic)
