@@ -9,7 +9,6 @@ class ShippingContainer:
     def __init__(self, owner_code, contents):
         self._owner_code = owner_code
         self._contents = contents
-        #self._serial = ShippingContainer._get_next_serial()
         self._bic = self._make_bic_code(
             owner_code=owner_code,
             serial=self._get_next_serial())
@@ -22,12 +21,12 @@ class ShippingContainer:
         return result
 
     @classmethod
-    def create_empty(cls, owner_code):
-        return cls(owner_code, contents=None)
+    def create_empty(cls, owner_code, *args, **kwargs):
+        return cls(owner_code, contents=None, *args, **kwargs)
 
     @classmethod
-    def create_with_items(cls, owner_code, items):
-        return cls(owner_code, contents=list(items))
+    def create_with_items(cls, owner_code, items, *args, **kwargs):
+        return cls(owner_code, contents=list(items), *args, **kwargs)
 
     @staticmethod
     def _make_bic_code(owner_code, serial):
@@ -36,14 +35,18 @@ class ShippingContainer:
 
 
 class RefrigeratorShippingContainer(ShippingContainer):
-
+    MAX_CELSIUS = 4.0
     @staticmethod
     def _make_bic_code(owner_code, serial):
         return iso6346.create(owner_code=owner_code,
                               serial=str(serial).zfill(6),
                               category='R')
 
-
+    def __init__(self, owner_code, contents, celsius):
+        super().__init__(owner_code, contents)
+        if celsius > RefrigeratorShippingContainer.MAX_CELSIUS:
+            raise ValueError("Temperature too hot!")
+        self._celsius = celsius
 
 
 if __name__ == '__main__':
@@ -55,5 +58,14 @@ if __name__ == '__main__':
             ["food", "textiles","minerals"])
     print(c3._bic)
     print(c3.__dict__)
-    r1 = RefrigeratorShippingContainer("MAE", "fish")
+    r1 = RefrigeratorShippingContainer(owner_code="MAE",
+                                       contents=["fish", "beef", "fruit"],
+                                       celsius=2)
+    r2 = RefrigeratorShippingContainer.create_with_items(
+        "ESC", ["broccoli, cauliflower","carrots"], celsius=2.0)
+    print(r2._contents)
+
+    r3 = RefrigeratorShippingContainer.create_empty("PPE", celsius=2.5)
+    print(r3)
+
     print(r1._bic)
