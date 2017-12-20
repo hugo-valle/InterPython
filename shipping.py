@@ -43,6 +43,8 @@ class ShippingContainer:
 
 class RefrigeratorShippingContainer(ShippingContainer):
     MAX_CELSIUS = 4.0
+    FRIDGE_VOLUME_FT3 = 100
+
     @staticmethod
     def _make_bic_code(owner_code, serial):
         return iso6346.create(owner_code=owner_code,
@@ -80,15 +82,38 @@ class RefrigeratorShippingContainer(ShippingContainer):
     def fahrenheit(self, value):
         self.celsius = RefrigeratorShippingContainer._f_to_c(value)
 
+    @property
+    def volume_ft3(self):
+        return (self._length_ft
+                * ShippingContainer.HEIGHT_FT
+                * ShippingContainer.WIDTH_FT
+                - RefrigeratorShippingContainer.FRIDGE_VOLUME_FT3)
+
+
+class HeatedRefrigeratedShippingContainer(RefrigeratorShippingContainer):
+    MIN_CELSIUS = -20.0
+
+    #@celsius.setter  # out of scope
+    @RefrigeratorShippingContainer.celsius.setter
+    def celsius(self, value):
+        if value < HeatedRefrigeratedShippingContainer.MIN_CELSIUS:
+            raise ValueError("Temperature is too cold!")
+        RefrigeratorShippingContainer.celsius.fset(self, value)
+
 
 if __name__ == '__main__':
-    c1 = ShippingContainer(owner_code="MAE",
-                           contents="fruit",
-                           length_ft=20)
-    print(c1.volume_ft3)
-
-    r1 = RefrigeratorShippingContainer.create_empty(owner_code='YML',
-                                                    length_ft=25,
-                                                    celsius=1.0 )
-    print(r1.volume_ft3)
+    h1 = HeatedRefrigeratedShippingContainer.create_empty(
+        owner_code='YML',
+        length_ft=40,
+        celsius=6.0 )
+    print(h1)
+    # c1 = ShippingContainer(owner_code="MAE",
+    #                        contents="fruit",
+    #                        length_ft=20)
+    # print(c1.volume_ft3)
+    #
+    # r1 = RefrigeratorShippingContainer.create_empty(owner_code='YML',
+    #                                                 length_ft=25,
+    #                                                 celsius=1.0 )
+    # print(r1.volume_ft3)
 
