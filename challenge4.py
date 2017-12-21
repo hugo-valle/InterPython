@@ -12,6 +12,7 @@ def main():
             if next_rec[-1].isdigit():
                 number = next_rec[-1]
                 print("Now processing {}".format((address)))
+                print(next_rec)
             elif next_rec[-1] == "going.":
                 number = str(int(number)//2)
             else:
