@@ -1,3 +1,5 @@
+from bisect import bisect_left
+
 class SortedSet:
     def __init__(self, items = None):
         """
@@ -34,3 +36,16 @@ class SortedSet:
             repr(self._items)
             if self._items
             else '' )
+
+    def __eq__(self, rhs):
+        if not isinstance(rhs, SortedSet):
+            return NotImplemented
+        return self._items == rhs._items
+
+    def count(self, item):
+        index = bisect_left(self._items, item)
+        found = ((index != len(self._items))
+                 and (self._items[index] == item))
+
+        return int(found)
+

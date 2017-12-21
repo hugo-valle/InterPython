@@ -136,3 +136,30 @@ class TestReprProtocol(unittest.TestCase):
     def test_repr_full(self):
         s = SortedSet([19, 40, 42])
         self.assertEqual(repr(s), "SortedSet([19, 40, 42])")
+
+
+class TestEqualityProtocol(unittest.TestCase):
+
+    def test_positive_equal(self):
+        self.assertTrue(SortedSet([4, 5, 6]) == SortedSet([4, 5, 6]))
+
+    def test_negative_equal(self):
+        self.assertFalse(SortedSet([4, 5, 6]) == SortedSet([6, 8, 9]))
+
+    def test_type_mismatch(self):
+        self.assertFalse(SortedSet([4, 5, 6]) == [4, 5, 6])
+
+    def test_identical(self):
+        s = SortedSet([10, 11, 12])
+        self.assertTrue(s == s)
+
+
+class TestCountProtocol(unittest.TestCase):
+
+    def test_count_zero(self):
+        s = SortedSet([1, 5, 7, 9])
+        self.assertEqual(s.count(11), 0)
+
+    def test_count_one(self):
+        s = SortedSet([1, 5, 7, 9])
+        self.assertEqual(s.count(7), 1)
